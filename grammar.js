@@ -1,105 +1,30 @@
+const PREC = {
+  PAREN_DECLARATOR: -10,
+  ASSIGNMENT: -1,
+  CONDITIONAL: -2,
+  DEFAULT: 0,
+  LOGICAL_OR: 1,
+  LOGICAL_AND: 2,
+  INCLUSIVE_OR: 3,
+  EXCLUSIVE_OR: 4,
+  BITWISE_AND: 5,
+  EQUAL: 6,
+  RELATIONAL: 7,
+  SIZEOF: 8,
+  SHIFT: 9,
+  ADD: 10,
+  MULTIPLY: 11,
+  CAST: 12,
+  UNARY: 13,
+  CALL: 14,
+  FIELD: 15,
+  SUBSCRIPT: 16
+};
+
 module.exports = grammar({
   name: 'wdl',
 
   rules: {
-    //source_file: $ => repeat($._definition),
-
-    /*
-    _definition: $ => choice(
-      //$.function_definition,
-      //$.call_definition,
-      //$.workflow_definition,
-      $.output_definition
-    ),
-    */
-/*
-    workflow_definition: $ => seq(
-      'workflow',
-      $.identifier,
-      '{',
-      repeat($.call_definition),
-      $.output_definition,
-      '}'
-    ),
-*/
-  /*
-    call_definition: $ => seq(
-      'call',
-      $.identifier,
-      '{',
-        'input:',
-        repeat($.input_param),
-      '}'
-    ),
-    */
-    /*
-    output_definition: $ => seq(
-      'output',
-      '{',
-
-
-             '}'
-    ),
-    */
-    /*
-    function_definition: $ => seq(
-      'func',
-      $.identifier,
-      $.parameter_list,
-      $._type,
-      $.block
-    ),
-
-    */
-    // need to change output_param
-    /*
-    output_param: $ => seq(
-        $.__type,
-        $.identifier,
-        '=',
-        $.identifier
-    ),
-    */
-    /*
-    __type: $ => seq('bool'),
-
-    input_param: $ => seq(
-      $.identifier,
-      '=',
-      $.identifier
-    ),
-
-    parameter_list: $ => seq(
-      '(',
-       // TODO: parameters
-      ')'
-    ),
-
-
-    block: $ => seq(
-      '{',
-      repeat($._statement),
-      '}'
-    ),
-
-    _statement: $ => choice(
-      $.return_statement
-      // TODO: other kinds of statements
-    ),
-
-    return_statement: $ => seq(
-      'return',
-      $._expression,
-      ';'
-    ),
-
-    _expression: $ => choice(
-      $.identifier,
-      $.number
-      // TODO: other kinds of expressions
-    ),
-
-    */
     // ws: $ => /((%x20) | (%x9) | (%xD) | (%xA))+/,
     ws: $ => /(' ')+/,
     identifier: $ => /[a-zA-Z][a-zA-Z0-9_]+/ ,
@@ -176,6 +101,27 @@ module.exports = grammar({
                                   $.float,
                                   $.boolean,
                                   $.identifier))),
+
+      math_expression: $ => choice(
+        prec.left(PREC.ADD, seq($._expression, '+', $._expression)),
+        prec.left(PREC.ADD, seq($._expression, '-', $._expression)),
+        prec.left(PREC.MULTIPLY, seq($._expression, '*', $._expression)),
+        prec.left(PREC.MULTIPLY, seq($._expression, '/', $._expression)),
+        prec.left(PREC.MULTIPLY, seq($._expression, '%', $._expression)),
+        prec.right(PREC.UNARY, seq('-', $._expression)),
+        prec.right(PREC.UNARY, seq('+', $._expression))),
+        logical_expression: $ => choice(
+        prec.left(PREC.LOGICAL_OR, seq($._expression, '||', $._expression)),
+        prec.left(PREC.LOGICAL_AND, seq($._expression, '&&', $._expression)),
+        prec.left(PREC.UNARY, seq('!', $._expression))
+      ),
+      equality_expression: $ => prec.left(PREC.EQUAL, seq(
+      $._expression, choice('==', '!='), $._expression
+      )),
+
+      relational_expression: $ => prec.left(PREC.RELATIONAL, seq(
+      $._expression, choice('<', '>', '<=', '>='), $._expression
+      )),
 
       document: $ => prec(2, repeat1(choice($.import, $.task, $.workflow))),
       import: $ => seq('import', repeat1($.ws),
