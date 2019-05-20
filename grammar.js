@@ -71,7 +71,7 @@ module.exports = grammar({
                   seq('=', $.expression) ) ),
       /// center_operator: $ => choice('%', '/', '+', '*', '-', '<', '=<', '>', '>=',
       // '==', '!=', '&&', '||'),
-      expression: $ => prec(3, choice(seq('(', $.expression, ')'),
+      expression: $ => prec(3, choice(
                               seq($.expression, '.', $.expression),
                               seq($.expression, '[', $.expression, ']'),
                               seq($.expression,'(',
@@ -85,20 +85,19 @@ module.exports = grammar({
                               seq('if', $.expression, 'then',
                               $.expression, 'else',
                               $.expression),
-                              // seq($.expression, $.center_operator, $.expression),
-                              seq('{',
-                                repeat(
-                                  seq($.expression, ':', $.expression)
-                                ),
-                              '}'),
-                              seq('[',
-                                repeat($.expression), ']'),
+                              // seq($.expression, $.center_operator, $.expression),,
                                 choice($.string,
                                   $.integer,
                                   $.float,
                                   $.boolean,
                                   $.identifier))),
-
+      parentheses_expression: $ => seq('(', $.expression, ')'),
+      dictionary_expression: $ => seq('{',
+        repeat(
+          seq($.expression, ':', $.expression)
+        ),
+      '}'),
+      bracket_expression: $ =>  seq('[', repeat($.expression), ']'),
       math_expression: $ => choice(
         prec.left(PREC.ADD, seq($.expression, '+', $.expression)),
         prec.left(PREC.ADD, seq($.expression, '-', $.expression)),
