@@ -69,8 +69,8 @@ module.exports = grammar({
       declaration: $ => seq($._type, $.identifier,
                 optional(
                   seq('=', $.expression) ) ),
-      center_operator: $ => choice('%', '/', '+', '*', '-', '<', '=<', '>', '>=',
-      '==', '!=', '&&', '||'),
+      /// center_operator: $ => choice('%', '/', '+', '*', '-', '<', '=<', '>', '>=',
+      // '==', '!=', '&&', '||'),
       expression: $ => prec(3, choice(seq('(', $.expression, ')'),
                               seq($.expression, '.', $.expression),
                               seq($.expression, '[', $.expression, ']'),
@@ -82,13 +82,10 @@ module.exports = grammar({
                                   ),')'
                                 )
                               )),
-                              seq('!', $.expression),
-                              seq('+', $.expression),
-                              seq( '-', $.expression),
                               seq('if', $.expression, 'then',
                               $.expression, 'else',
                               $.expression),
-                              seq($.expression, $.center_operator, $.expression),
+                              // seq($.expression, $.center_operator, $.expression),
                               seq('{',
                                 repeat(
                                   seq($.expression, ':', $.expression)
@@ -103,24 +100,24 @@ module.exports = grammar({
                                   $.identifier))),
 
       math_expression: $ => choice(
-        prec.left(PREC.ADD, seq($._expression, '+', $._expression)),
-        prec.left(PREC.ADD, seq($._expression, '-', $._expression)),
-        prec.left(PREC.MULTIPLY, seq($._expression, '*', $._expression)),
-        prec.left(PREC.MULTIPLY, seq($._expression, '/', $._expression)),
-        prec.left(PREC.MULTIPLY, seq($._expression, '%', $._expression)),
-        prec.right(PREC.UNARY, seq('-', $._expression)),
-        prec.right(PREC.UNARY, seq('+', $._expression))),
+        prec.left(PREC.ADD, seq($.expression, '+', $.expression)),
+        prec.left(PREC.ADD, seq($.expression, '-', $.expression)),
+        prec.left(PREC.MULTIPLY, seq($.expression, '*', $.expression)),
+        prec.left(PREC.MULTIPLY, seq($.expression, '/', $.expression)),
+        prec.left(PREC.MULTIPLY, seq($.expression, '%', $.expression)),
+        prec.right(PREC.UNARY, seq('-', $.expression)),
+        prec.right(PREC.UNARY, seq('+', $.expression))),
         logical_expression: $ => choice(
-        prec.left(PREC.LOGICAL_OR, seq($._expression, '||', $._expression)),
-        prec.left(PREC.LOGICAL_AND, seq($._expression, '&&', $._expression)),
-        prec.left(PREC.UNARY, seq('!', $._expression))
+        prec.left(PREC.LOGICAL_OR, seq($.expression, '||', $.expression)),
+        prec.left(PREC.LOGICAL_AND, seq($.expression, '&&', $.expression)),
+        prec.left(PREC.UNARY, seq('!', $.expression))
       ),
       equality_expression: $ => prec.left(PREC.EQUAL, seq(
-      $._expression, choice('==', '!='), $._expression
+      $.expression, choice('==', '!='), $.expression
       )),
 
       relational_expression: $ => prec.left(PREC.RELATIONAL, seq(
-      $._expression, choice('<', '>', '<=', '>='), $._expression
+      $.expression, choice('<', '>', '<=', '>='), $.expression
       )),
 
       document: $ => prec(2, repeat1(choice($.import, $.task, $.workflow))),
