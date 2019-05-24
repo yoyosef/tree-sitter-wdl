@@ -88,6 +88,7 @@ module.exports = grammar({
                                  $.dictionary_expression,
                                  $.math_expression,
                                  $.bracket_expression,
+                                 $.equality_expression
                                     ),
                                 ),
       parentheses_expression: $ => prec(PREC.PAREN_DECLARATOR, seq('(', $.expression, ')')),
