@@ -1,0 +1,24 @@
+==================
+Multiplication and Addition Precedence
+==================
+
+1+2*2
+
+---
+
+(definition (expression (math_expression
+            (expression (integer))
+                    (expression (math_expression
+                            (expression (integer)) (expression (integer)))))))
+
+
+==================
+Unary Expression
+==================
+
++1-2
+
+---
+(definition (expression (math_expression
+          (expression (math_expression
+          (expression (integer)))) (expression (integer)))))

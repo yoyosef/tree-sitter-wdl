@@ -25,18 +25,21 @@ module.exports = grammar({
   name: 'wdl',
 
   rules: {
+    // ws: $ => /((%x20) | (%x9) | (%xD) | (%xA))+/,
+    // ws: $ => /(' ')+/,
+    definition: $ => repeat($.expression),
     identifier: $ => prec(-1, /[a-zA-Z][a-zA-Z0-9_]+/),
     integer: $ => /[1-9][0-9]*|0[xX][0-9a-fA-F]+|0[0-7]*/,
     float: $ => /(([0-9]+)?\.([0-9]+)|[0-9]+\.|[0-9]+)([eE][-+]?[0-9]+)?/,
-    boolean: $ => prec(2, token(choice('true', 'false'))),
+    boolean: $ => choice('true', 'false'),
     object_type: $ => 'Object',
-    primitive_type: $ => prec.left(3, choice(
+    primitive_type: $ => choice(
         'Boolean',
         'Int',
         'Float',
         'File',
         'String'
-      )),
+      ),
     // string: $ => prec(2,
     // choice(/'([\\\'\n]|\\[\\"\'nrbtfav\?]|\\[0-7]{1,3}|\\x[0-9a-fA-F]+|\\[uU]([0-9a-fA-F]{4})([0-9a-fA-F]{4})?)*'/,
     // /"([\\\"\n]|\\[\\"\'nrbtfav\?]|\\[0-7]{1,3}|\\x[0-9a-fA-F]+|\\[uU]([0-9a-fA-F]{4})([0-9a-fA-F]{4})?)*"/))
@@ -59,66 +62,67 @@ module.exports = grammar({
         /u[0-9a-fA-F]{4}/,
         /U[0-9a-fA-F]{8}/
       )
-    ))
-
-
-
+    )),
 
       /// center_operator: $ => choice('%', '/', '+', '*', '-', '<', '=<', '>', '>=',
       // '==', '!=', '&&', '||'),
-      // expression: $ => prec(3, choice(
-      //                         seq($.expression, '.', $.expression),
-      //                         seq($.expression, '[', $.expression, ']'),
-      //                         seq($.expression,'(',
-      //                         optional(
-      //                           seq($.expression,
-      //                             repeat(
-      //                               seq(',',$.expression)
-      //                             ),')'
-      //                           )
-      //                         )),
-      //                         seq('if', $.expression, 'then',
-      //                         $.expression, 'else',
-      //                         $.expression),
-      //                         // seq($.expression, $.center_operator, $.expression),,
-      //                           choice($.string,
-      //                             $.integer,
-      //                             $.float,
-      //                             $.boolean,
-      //                             $.identifier))),
-      // parentheses_expression: $ => seq('(', $.expression, ')'),
-      // dictionary_expression: $ => seq('{',
-      //   repeat(
-      //     seq($.expression, ':', $.expression)
-      //   ),
-      // '}'),
-      // bracket_expression: $ =>  seq('[', repeat($.expression), ']'),
-      // math_expression: $ => choice(
-      //   prec.left(PREC.ADD, seq($.expression, '+', $.expression)),
-      //   prec.left(PREC.ADD, seq($.expression, '-', $.expression)),
-      //   prec.left(PREC.MULTIPLY, seq($.expression, '*', $.expression)),
-      //   prec.left(PREC.MULTIPLY, seq($.expression, '/', $.expression)),
-      //   prec.left(PREC.MULTIPLY, seq($.expression, '%', $.expression)),
-      //   prec.right(PREC.UNARY, seq('-', $.expression)),
-      //   prec.right(PREC.UNARY, seq('+', $.expression))),
-      //   logical_expression: $ => choice(
-      //   prec.left(PREC.LOGICAL_OR, seq($.expression, '||', $.expression)),
-      //   prec.left(PREC.LOGICAL_AND, seq($.expression, '&&', $.expression)),
-      //   prec.left(PREC.UNARY, seq('!', $.expression))
-      // ),
-      // equality_expression: $ => prec.left(PREC.EQUAL, seq(
-      // $.expression, choice('==', '!='), $.expression
-      // )),
-      //
-      // relational_expression: $ => prec.left(PREC.RELATIONAL, seq(
-      // $.expression, choice('<', '>', '<=', '>='), $.expression
-      // ))
+      expression: $ => prec(3, choice(
+                              prec.left(seq($.expression, '.', $.expression)),
+                              seq($.expression, '[', $.expression, ']'),
+                              seq($.expression, '(',
+                              optional(
+                                seq($.expression,
+                                  repeat(
+                                    seq(',',$.expression)
+                                  ))), ')'),
+                              prec.left(seq('if', $.expression, 'then',
+                              $.expression, 'else',
+                              $.expression)),
+                              // seq($.expression, $.center_operator, $.expression),,
+                                choice($.string_literal,
+                                  $.integer,
+                                  $.float,
+                                  $.boolean,
+                                  $.identifier),
+                                  $.parentheses_expression,
+                                 $.dictionary_expression,
+                                 $.math_expression,
+                                 $.bracket_expression,
+                                    ),
+                                ),
+      parentheses_expression: $ => prec(PREC.PAREN_DECLARATOR, seq('(', $.expression, ')')),
+      dictionary_expression: $ => seq('{',
+        repeat(
+          seq($.expression, ':', $.expression)
+        ),
+      '}'),
+      bracket_expression: $ =>  prec(PREC.PAREN_DECLARATOR, seq('[', repeat($.expression), ']')),
+      math_expression: $ => choice(
+        prec.left(PREC.ADD, seq($.expression, '+', $.expression)),
+        prec.left(PREC.ADD, seq($.expression, '-', $.expression)),
+        prec.left(PREC.MULTIPLY, seq($.expression, '*', $.expression)),
+        prec.left(PREC.MULTIPLY, seq($.expression, '/', $.expression)),
+        prec.left(PREC.MULTIPLY, seq($.expression, '%', $.expression)),
+        prec.right(PREC.UNARY, seq('-', $.expression)),
+        prec.right(PREC.UNARY, seq('+', $.expression))),
+        logical_expression: $ => choice(
+        prec.left(PREC.LOGICAL_OR, seq($.expression, '||', $.expression)),
+        prec.left(PREC.LOGICAL_AND, seq($.expression, '&&', $.expression)),
+        prec.left(PREC.UNARY, seq('!', $.expression))
+      ),
+      equality_expression: $ => prec.left(PREC.EQUAL, seq(
+      $.expression, choice('==', '!='), $.expression
+      )),
+
+      relational_expression: $ => prec.left(PREC.RELATIONAL, seq(
+      $.expression, choice('<', '>', '<=', '>='), $.expression
+      ))
 
 
       // ,
-      // document: $ => prec(2, repeat1(choice($.import, $.task, $.workflow))),
+      // document: $ => prec(2,repeat1(choice($.import, $.task, $.workflow))),
       // import: $ => seq('import', repeat1($.ws),
-      //                 $.string,
+      //                 $.string_literal,
       //                 optional(
       //                 seq(
       //                   repeat1($.ws),
@@ -147,17 +151,17 @@ module.exports = grammar({
       // var_option_value: $ => $.expression,
       //
       // task_output: $ => seq('output', repeat($.ws), '{', repeat(seq(repeat($.ws), $.task_output_kv, repeat($.ws))), '}'),
-      // task_output_kv: $ => seq($._type, $.identifier, repeat($.ws), '=', repeat($.ws), $.string),
+      // task_output_kv: $ => seq($._type, $.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
       //
       // runtime: $ => seq('runtime', repeat($.ws), '{', repeat(seq(repeat($.ws), $.runtime_kv, repeat($.ws))), '}'),
       // runtime_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.expression),
       //
       // parameter_meta: $ => seq('parameter_meta', repeat($.ws),
       // '{', repeat(seq(repeat($.ws), $.parameter_meta_kv, repeat($.ws))), '}'),
-      // parameter_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string),
+      // parameter_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
       //
       // meta: $ => seq('meta', repeat($.ws), '{', repeat(seq(repeat($.ws), $.meta_kv, repeat($.ws))), '}'),
-      // meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string),
+      // meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
       //
       // workflow: $ => seq('workflow', repeat1($.ws), $.identifier, repeat($.ws),  '{', repeat($.ws), repeat($.workflow_element), repeat($.ws), '}'),
       // workflow_element: $ => choice($.call, $.loop, $.conditional, $.declaration, $.scatter, $.parameter_meta, $.meta),
@@ -184,9 +188,9 @@ module.exports = grammar({
       // conditional: $ => seq('if', '(', $.expression, ')', '{', repeat($.workflow_element), '}'),
       //
       // wf_parameter_meta: $ => seq('parameter_meta', repeat($.ws), '{', repeat(seq(repeat($.ws), $.wf_parameter_meta_kv, repeat($.ws))), '}'),
-      // wf_parameter_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string),
+      // wf_parameter_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
       // wf_meta: $ => seq('meta', repeat($.ws), '{', repeat(seq(repeat($.ws), $.wf_meta_kv, repeat($.ws))), '}'),
-      // wf_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string),
+      // wf_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
       //
       // array_type: $ => seq('Array',
       //     '[',
