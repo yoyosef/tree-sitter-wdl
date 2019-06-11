@@ -27,7 +27,7 @@ module.exports = grammar({
   rules: {
     // ws: $ => /((%x20) | (%x9) | (%xD) | (%xA))+/,
     // ws: $ => /(' ')+/,
-    definition: $ => repeat($.expression),
+    definition: $ => choice(repeat($.expression), repeat($.type), repeat($.runtime), repeat($.task), repeat($.call), repeat($.workflow)),
     identifier: $ => prec(-1, /[a-zA-Z][a-zA-Z0-9_]+/),
     integer: $ => /[1-9][0-9]*|0[xX][0-9a-fA-F]+|0[0-7]*/,
     float: $ => /(([0-9]+)?\.([0-9]+)|[0-9]+\.|[0-9]+)([eE][-+]?[0-9]+)?/,
@@ -117,105 +117,116 @@ module.exports = grammar({
 
       relational_expression: $ => prec.left(PREC.RELATIONAL, seq(
       $.expression, choice('<', '>', '<=', '>='), $.expression
-      ))
+    )),
+
+    type: $ => seq(choice($.primitive_type,
+        $.array_type,
+        $.map_type,
+        $.object_type),
+        optional($.type_postfix_quantifier)),
+
+      array_type: $ => seq('Array',
+            '[',
+            choice($.primitive_type, $.object_type, $.array_type),
+             ']'
+      ),
+
+      map_type: $ => seq('Map', '[', $.primitive_type, ',',
+      choice($.primitive_type, $.array_type, $.map_type, $.object_type), ']'),
+      type_postfix_quantifier: $ => choice('?', '+'),
+
+      runtime: $ => seq('runtime',
+                                '{',
+                                      repeat(seq( $.runtime_kv)),
+                                '}'),
+      runtime_kv: $ => seq($.identifier,  '=',  $.expression),
+
+      task_output: $ => seq('output',  '{', repeat(seq( $.task_output_kv)), '}'),
+      task_output_kv: $ => seq($.type, $.identifier,  '=',  $.string_literal),
+      parameter_meta: $ => seq('parameter_meta',
+      '{', repeat(seq( $.parameter_meta_kv, '}'))),
+      parameter_meta_kv: $ => seq($.identifier,  '=',  $.string_literal),
+      meta: $ => seq('meta',  '{', repeat(seq( $.meta_kv)),'}'),
+      meta_kv: $ => seq($.identifier,  '=',  $.string_literal),
 
 
-      // ,
+      task: $ => prec(1, seq('task',
+             $.identifier,
+
+            '{',  repeat($.declaration),
+             $.task_sections,  '}')),
+      task_sections: $ => prec(1, repeat1(choice($.command,
+                                                    $.runtime,
+                                                    $.task_output,
+                                                    $.parameter_meta,
+                                                    $.meta))),
+
+      declaration: $ => seq($.type, $.identifier,
+                  optional(
+                    seq('=', $.expression) ) ),
+
+      command: $ =>choice(
+                  seq('command',  '{', repeat1($.command_part),  '}'),
+                  seq('command',  '<<<', repeat1($.command_part),  '>>>')),
+
+      command_part: $ => choice($.command_part_string, $.command_part_var),
+      command_part_string: $ => /[a-zA-Z]+/,
+      command_part_var: $ => seq('$', '{', repeat($.var_option), $.expression, '}'),
+
+      var_option: $ => seq($.var_option_key,  '=',  $.var_option_value),
+      var_option_key: $ => choice('sep', 'true', 'false', 'quote', 'default'),
+      var_option_value: $ => $.expression,
+
+      call: $ => seq('call', $.namespaced_identifier,
+                           optional(seq('as', $.identifier)),
+                           optional($.call_body)),
+      call_body: $ => seq('{', optional($.inputs), '}'),
+      inputs: $ => seq('input',  ':',  $.variable_mappings),
+
+      variable_mappings: $ => seq($.variable_mapping_kv, repeat(seq(',', $.variable_mapping_kv))),
+      variable_mapping_kv: $ => seq($.identifier,  '=',  $.expression),
+       namespaced_identifier: $ => seq($.identifier,
+         repeat(seq('.', $.identifier))),
+
+
+      loop: $ => seq('while', '(', $.expression, ')',
+                    '{', repeat($.workflow_element), '}'),
+      conditional: $ => seq('if', '(', $.expression, ')',
+                            '{', repeat($.workflow_element), '}'),
+
+
       // document: $ => prec(2,repeat1(choice($.import, $.task, $.workflow))),
-      // import: $ => seq('import', repeat1($.ws),
+      // import: $ => seq('import',
       //                 $.string_literal,
       //                 optional(
       //                 seq(
-      //                   repeat1($.ws),
       //                   'as',
-      //                   repeat1($.ws), $.identifier)
+      //                    $.identifier)
       //                 )
       //               ),
-      // task: $ => prec(1, seq('task', repeat1($.ws),
-      //       $.identifier,
-      //       repeat($.ws),
-      //       '{', repeat($.ws), repeat($.declaration),
-      //       $.task_sections, repeat($.ws), '}')),
-      //
-      // task_sections: $ => prec(1, repeat1(choice($.command, $.runtime, $.task_output, $.parameter_meta, $.meta))),
-      //
-      // command: $ =>choice(
-      //             seq('command', repeat($.ws), '{', /(0xA | 0xD)*/, repeat1($.command_part), repeat1($.ws), '}'),
-      //             seq('command', repeat($.ws), '<<<', /(0xA | 0xD)*/, repeat1($.command_part), repeat1($.ws), '>>>')),
-      //
-      // command_part: $ => choice($.command_part_string, $.command_part_var),
-      // command_part_string: $ => /\{+/,
-      // command_part_var: $ => seq(/\{/, repeat($.var_option), $.expression, '}'),
-      //
-      // var_option: $ => seq($.var_option_key, repeat($.ws), '=', repeat($.ws), $.var_option_value),
-      // var_option_key: $ => choice('sep', 'true', 'false', 'quote', 'default'),
-      // var_option_value: $ => $.expression,
-      //
-      // task_output: $ => seq('output', repeat($.ws), '{', repeat(seq(repeat($.ws), $.task_output_kv, repeat($.ws))), '}'),
-      // task_output_kv: $ => seq($._type, $.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
-      //
-      // runtime: $ => seq('runtime', repeat($.ws), '{', repeat(seq(repeat($.ws), $.runtime_kv, repeat($.ws))), '}'),
-      // runtime_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.expression),
-      //
-      // parameter_meta: $ => seq('parameter_meta', repeat($.ws),
-      // '{', repeat(seq(repeat($.ws), $.parameter_meta_kv, repeat($.ws))), '}'),
-      // parameter_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
-      //
-      // meta: $ => seq('meta', repeat($.ws), '{', repeat(seq(repeat($.ws), $.meta_kv, repeat($.ws))), '}'),
-      // meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
-      //
-      // workflow: $ => seq('workflow', repeat1($.ws), $.identifier, repeat($.ws),  '{', repeat($.ws), repeat($.workflow_element), repeat($.ws), '}'),
-      // workflow_element: $ => choice($.call, $.loop, $.conditional, $.declaration, $.scatter, $.parameter_meta, $.meta),
-      //
-      // call: $ => seq('call', repeat($.ws), $.namespaced_identifier, repeat1($.ws),
-      //                       optional(seq('as', $.identifier)),
-      //                       repeat($.ws), optional($.call_body)),
-      //
-      // call_body: $ => seq('{', repeat($.ws), optional($.inputs), repeat($.ws), '}'),
-      // inputs: $ => seq('input', repeat($.ws), ':', repeat($.ws), $.variable_mappings),
-      //
-      // variable_mappings: $ => seq($.variable_mapping_kv, repeat(seq(',', $.variable_mapping_kv))),
-      // variable_mapping_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.expression),
-      //
-      // scatter: $ => seq('scatter',
-      //                 repeat($.ws), '(', repeat($.ws),
-      //                  repeat($.scatter_iteration_statment), repeat($.ws),  ')', repeat($.ws), $.scatter_body),
-      // scatter_iteration_statment: $ => seq($.identifier, repeat($.ws), 'in', repeat($.ws), $.expression),
-      // scatter_body: $ => seq('{', repeat($.ws),
-      //                       repeat($.workflow_element),
-      //                       repeat($.ws), '}'),
-      // loop: $ => seq('while', '(', $.expression, ')', '{', repeat($.workflow_element), '}'),
-      //
-      // conditional: $ => seq('if', '(', $.expression, ')', '{', repeat($.workflow_element), '}'),
-      //
-      // wf_parameter_meta: $ => seq('parameter_meta', repeat($.ws), '{', repeat(seq(repeat($.ws), $.wf_parameter_meta_kv, repeat($.ws))), '}'),
-      // wf_parameter_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
-      // wf_meta: $ => seq('meta', repeat($.ws), '{', repeat(seq(repeat($.ws), $.wf_meta_kv, repeat($.ws))), '}'),
-      // wf_meta_kv: $ => seq($.identifier, repeat($.ws), '=', repeat($.ws), $.string_literal),
-      //
-      // array_type: $ => seq('Array',
-      //     '[',
-      //     choice($.primitive_type, $.object_type, $.array_type),
-      //      ']'
-      //    ),
-      // map_type: $ => seq('Map', '[', $.primitive_type, ',',
-      // choice($.primitive_type, $.array_type, $.map_type, $.object_type), ']'),
-      //
-      // type_postfix_quantifier: $ => choice('?', '+'),
-      //
-      //  fully_qualified_name: $ => seq($.identifier,
-      //    repeat(seq('.', $.identifier))),
-      //  namespaced_identifier: $ => seq($.identifier,
-      //    repeat(seq('.', $.identifier))),
-      //   number: $ => /\d+/,
-      //
-      //   declaration: $ => seq($._type, $.identifier,
-      //             optional(
-      //               seq('=', $.expression) ) ),
-      // _type: $ => seq(choice($.primitive_type,
-      //   $.array_type,
-      //   $.map_type,
-      //   $.object_type),
-      //   optional($.type_postfix_quantifier)),
+      workflow: $ => seq('workflow',  $.identifier,   '{',  repeat($.workflow_element),  '}'),
+      workflow_element: $ => choice($.call,
+                                    $.loop,
+                                    $.conditional,
+                                    $.declaration,
+                                    $.scatter,
+                                    $.parameter_meta,
+                                    $.meta),
+
+      scatter: $ => seq('scatter',
+                       '(',
+                       repeat($.scatter_iteration_statment),   ')',  $.scatter_body),
+      scatter_iteration_statment: $ => seq($.identifier,  'in',  $.expression),
+      scatter_body: $ => seq('{',
+                            repeat($.workflow_element),
+                             '}'),
+      fully_qualified_name: $ => seq($.identifier,
+         repeat(seq('.', $.identifier)))
+
+      // wf_parameter_meta: $ => seq('parameter_meta',  '{', repeat(seq( $.wf_parameter_meta_kv, repeat($.ws))), '}'),
+      // wf_parameter_meta_kv: $ => seq($.identifier,  '=',  $.string_literal),
+      // wf_meta: $ => seq('meta',  '{', repeat(seq( $.wf_meta_kv, repeat($.ws))), '}'),
+      // wf_meta_kv: $ => seq($.identifier,  '=',  $.string_literal),
+
       }
 });

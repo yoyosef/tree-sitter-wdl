@@ -1,0 +1,28 @@
+==================
+Task test
+==================
+task start {
+
+  command <<<
+    aa ${aaaac}
+  >>>
+  runtime{
+
+  }
+  output{
+
+  }
+}
+---
+(definition (task (identifier)
+
+
+(task_sections
+      (command
+            (command_part  (command_part_string))
+            (command_part  (command_part_var (expression (identifier))))
+
+      )
+
+      (runtime)
+      (task_output))))
