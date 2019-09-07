@@ -27,7 +27,7 @@ module.exports = grammar({
   rules: {
     // ws: $ => /((%x20) | (%x9) | (%xD) | (%xA))+/,
     // ws: $ => /(' ')+/,
-    definition: $ => choice(repeat($.expression), repeat($.type), repeat($.runtime), repeat($.task), repeat($.call), repeat($.workflow)),
+    definition: $ => choice($.expression, $.type, $.runtime, $.document, $.call),
     identifier: $ => prec(-1, /[a-zA-Z][a-zA-Z0-9_]+/),
     integer: $ => /[1-9][0-9]*|0[xX][0-9a-fA-F]+|0[0-7]*/,
     float: $ => /(([0-9]+)?\.([0-9]+)|[0-9]+\.|[0-9]+)([eE][-+]?[0-9]+)?/,
@@ -66,7 +66,7 @@ module.exports = grammar({
 
       /// center_operator: $ => choice('%', '/', '+', '*', '-', '<', '=<', '>', '>=',
       // '==', '!=', '&&', '||'),
-      expression: $ => prec(3, choice(
+      expression: $ =>  prec.left(6, choice(
                               prec.left(seq($.expression, '.', $.expression)),
                               seq($.expression, '[', $.expression, ']'),
                               seq($.expression, '(',
@@ -119,11 +119,11 @@ module.exports = grammar({
       $.expression, choice('<', '>', '<=', '>='), $.expression
     )),
 
-    type: $ => seq(choice($.primitive_type,
+    type: $ => prec.left(seq(choice($.primitive_type,
         $.array_type,
         $.map_type,
         $.object_type),
-        optional($.type_postfix_quantifier)),
+        optional($.type_postfix_quantifier))),
 
       array_type: $ => seq('Array',
             '[',
@@ -177,9 +177,9 @@ module.exports = grammar({
       var_option_key: $ => choice('sep', 'true', 'false', 'quote', 'default'),
       var_option_value: $ => $.expression,
 
-      call: $ => seq('call', $.namespaced_identifier,
+      call: $ => prec.right(6, seq('call', $.namespaced_identifier,
                            optional(seq('as', $.identifier)),
-                           optional($.call_body)),
+                           optional($.call_body))),
       call_body: $ => seq('{', optional($.inputs), '}'),
       inputs: $ => seq('input',  ':',  $.variable_mappings),
 
@@ -195,16 +195,16 @@ module.exports = grammar({
                             '{', repeat($.workflow_element), '}'),
 
 
-      // document: $ => prec(2,repeat1(choice($.import, $.task, $.workflow))),
-      // import: $ => seq('import',
-      //                 $.string_literal,
-      //                 optional(
-      //                 seq(
-      //                   'as',
-      //                    $.identifier)
-      //                 )
-      //               ),
-      workflow: $ => seq('workflow',  $.identifier,   '{',  repeat($.workflow_element),  '}'),
+      document: $ => repeat1(choice($.import, $.task, $.workflow)),
+      import: $ => seq('import',
+                      $.string_literal,
+                      optional(
+                      seq(
+                        'as',
+                         $.identifier)
+                      )
+                    ),
+      workflow: $ => prec.right(6, seq('workflow',  $.identifier,   '{',  repeat($.workflow_element),  '}')),
       workflow_element: $ => choice($.call,
                                     $.loop,
                                     $.conditional,

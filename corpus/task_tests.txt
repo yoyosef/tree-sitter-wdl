@@ -14,7 +14,7 @@ task start {
   }
 }
 ---
-(definition (task (identifier)
+(definition (document (task (identifier)
 
 
 (task_sections
@@ -25,4 +25,4 @@ task start {
       )
 
       (runtime)
-      (task_output))))
+      (task_output)))))
