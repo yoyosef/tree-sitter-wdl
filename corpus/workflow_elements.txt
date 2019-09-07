@@ -77,20 +77,20 @@ task HaplotypeCallerERC {
                                                     (call_body
                                                             (inputs (variable_mappings (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))))))
                                                             ))))))
-                                  (task (identifier)
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                            (task_sections
-                                              (task_output
-                                                 (task_output_kv
-                                                   (type (primitive_type))
-                                                       (identifier)
-                                                         (string_literal)))))
+            (task (identifier)
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                      (task_sections
+                        (task_output
+                           (task_output_kv
+                             (type (primitive_type))
+                                 (identifier)
+                                   (string_literal)))))
               )
 )
 
@@ -170,22 +170,22 @@ task HaplotypeCallerERC {
                                                     (call_body
                                                             (inputs (variable_mappings (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))))))
                                                             ))))))
-                                  (task (identifier)
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                          (declaration (type (primitive_type)) (identifier))
-                                            (task_sections
-                                                  (command
-                                                      (command_part (command_part_string)) (ERROR (UNEXPECTED 'j'))
-                                                      (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED 'T')
-                                                                                                (UNEXPECTED 'E') (UNEXPECTED 'R'))
-                                                      (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
-                                                      (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
-                                                      (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED '_') (UNEXPECTED 'g') (UNEXPECTED 'v')))
-                                          (task_output (task_output_kv (type (primitive_type)) (identifier) (string_literal)))))
+            (task (identifier)
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                    (declaration (type (primitive_type)) (identifier))
+                      (task_sections
+                            (command
+                                (command_part (command_part_string)) (ERROR (UNEXPECTED 'j'))
+                                (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED 'T')
+                                                                          (UNEXPECTED 'E') (UNEXPECTED 'R'))
+                                (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
+                                (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
+                                (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED '_') (UNEXPECTED 'g') (UNEXPECTED 'v')))
+                    (task_output (task_output_kv (type (primitive_type)) (identifier) (string_literal)))))
               )
 )

@@ -1,5 +1,5 @@
 ==================
-Task test
+Simple task test
 ==================
 task start {
 
@@ -26,3 +26,44 @@ task start {
 
       (runtime)
       (task_output)))))
+
+==================
+Task w/ complex command
+==================
+task HaplotypeCallerERC {
+
+  File GATK
+  File RefFasta
+  File RefIndex
+  File RefDict
+  String sampleName
+  File bamFile
+  File bamIndex
+
+  command {
+    java -jar ${GATK} \
+        -T HaplotypeCaller 
+  }
+  output {
+    File GVCF = "${sampleName}_rawLikelihoods.g.vcf"
+  }
+}
+---
+(definition (document (task (identifier)
+        (declaration (type (primitive_type)) (identifier))
+        (declaration (type (primitive_type)) (identifier))
+        (declaration (type (primitive_type)) (identifier))
+        (declaration (type (primitive_type)) (identifier))
+        (declaration (type (primitive_type)) (identifier))
+        (declaration (type (primitive_type)) (identifier))
+        (declaration (type (primitive_type)) (identifier))
+          (task_sections
+                (command
+                    (command_part (command_part_string)) (ERROR (UNEXPECTED 'j'))
+                    (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED 'T')
+                                                              (UNEXPECTED 'E') (UNEXPECTED 'R'))
+                    (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
+                    (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
+                    (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED '_') (UNEXPECTED 'g') (UNEXPECTED 'v')))
+        (task_output (task_output_kv (type (primitive_type)) (identifier) (string_literal)))))
+  ))
