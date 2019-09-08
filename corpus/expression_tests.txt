@@ -92,7 +92,14 @@ Dictionary w/ values
 ==================
 {1: "3", 2: "5"}
 ---
-(definition (expression (dictionary_expression)))
+(definition
+    (expression
+       (dictionary_expression
+          (expression (integer)) (expression (string_literal))
+          (expression (integer)) (expression (string_literal))
+      )
+    )
+)
 
 ==================
 String - Double Quotes

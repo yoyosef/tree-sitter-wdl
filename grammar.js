@@ -104,10 +104,11 @@ module.exports = grammar({
                                 ),
       parentheses_expression: $ => prec(PREC.PAREN_DECLARATOR, seq('(', $.expression, ')')),
       dictionary_expression: $ => seq('{',
-        repeat(
+        choice(repeat(
           seq($.expression, ':', $.expression)
         ),
-      '}'),
+        seq( seq($.expression, ':', $.expression), repeat1(seq(",", $.expression, ':', $.expression))))
+      ,'}'),
       bracket_expression: $ =>  prec(PREC.PAREN_DECLARATOR, seq('[', repeat($.expression), ']')),
       math_expression: $ => choice(
         prec.left(PREC.ADD, seq($.expression, '+', $.expression)),
