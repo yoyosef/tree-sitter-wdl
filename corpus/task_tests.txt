@@ -42,7 +42,7 @@ task HaplotypeCallerERC {
 
   command {
     java -jar ${GATK} \
-        -T HaplotypeCaller 
+        -T HaplotypeCaller
   }
   output {
     File GVCF = "${sampleName}_rawLikelihoods.g.vcf"
@@ -62,8 +62,5 @@ task HaplotypeCallerERC {
                     (command_part (command_part_string)) (ERROR (UNEXPECTED 'j'))
                     (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED 'T')
                                                               (UNEXPECTED 'E') (UNEXPECTED 'R'))
-                    (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
-                    (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
-                    (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED '_') (UNEXPECTED 'g') (UNEXPECTED 'v')))
         (task_output (task_output_kv (type (primitive_type)) (identifier) (string_literal)))))
   ))
