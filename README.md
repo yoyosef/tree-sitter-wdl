@@ -18,3 +18,7 @@ $ tree-sitter test
 ```
 ## WDL Language Specification
 https://software.broadinstitute.org/wdl/documentation/spec
+
+## TODO
+* Write more tests
+* Fix Command parsing (Currently Broken)
