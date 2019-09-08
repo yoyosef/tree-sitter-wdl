@@ -44,7 +44,7 @@ module.exports = grammar({
     // choice(/'([\\\'\n]|\\[\\"\'nrbtfav\?]|\\[0-7]{1,3}|\\x[0-9a-fA-F]+|\\[uU]([0-9a-fA-F]{4})([0-9a-fA-F]{4})?)*'/,
     // /"([\\\"\n]|\\[\\"\'nrbtfav\?]|\\[0-7]{1,3}|\\x[0-9a-fA-F]+|\\[uU]([0-9a-fA-F]{4})([0-9a-fA-F]{4})?)*"/))
 
-    string_literal: $ => seq(
+    string_literal: $ => choice(seq(
       '"',
       repeat(choice(
         token.immediate(prec(1, /[^\\"\n]+/)),
@@ -52,6 +52,17 @@ module.exports = grammar({
       )),
       '"'
     ),
+    seq(
+      "\'",
+      repeat(choice(
+        choice(
+        $.escape_sequence,
+        token.immediate(/[^\n']/)
+      ),
+        $.escape_sequence
+      )),
+      "\'"
+    )),
 
     escape_sequence: $ => token.immediate(seq(
       '\\',
