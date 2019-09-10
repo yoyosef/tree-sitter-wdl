@@ -80,12 +80,7 @@ module.exports = grammar({
       expression: $ =>  prec.left(6, choice(
                               prec.left(seq($.expression, '.', $.expression)),
                               seq($.expression, '[', $.expression, ']'),
-                              seq($.expression, '(',
-                              optional(
-                                seq($.expression,
-                                  repeat(
-                                    seq(',',$.expression)
-                                  ))), ')'),
+                              prec.left($.function_expression),
                               prec.left(seq('if', $.expression, 'then',
                               $.expression, 'else',
                               $.expression)),
@@ -102,6 +97,11 @@ module.exports = grammar({
                                  $.equality_expression
                                     ),
                                 ),
+      function_expression: $=> seq($.expression, '(', optional(
+        seq($.expression,
+          repeat(
+            seq(',',$.expression)
+          ))), ')'),
       parentheses_expression: $ => prec(PREC.PAREN_DECLARATOR, seq('(', $.expression, ')')),
       dictionary_expression: $ => seq('{',
         choice(repeat(
