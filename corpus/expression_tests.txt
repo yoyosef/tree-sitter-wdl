@@ -56,6 +56,13 @@ Bracket Expression
                             (expression (integer)) (expression (integer)))))))))
 
 ==================
+Tuple Expression
+==================
+(2, 3)
+---
+(definition (expression (integer) (integer)))
+
+==================
 Complex Equality
 ==================
 
