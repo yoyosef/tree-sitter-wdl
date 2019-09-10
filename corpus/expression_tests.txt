@@ -38,8 +38,12 @@ Equality
                                 (expression (integer))))
 )
 
-
-
+==================
+Relational Expression
+==================
+3 > 2
+---
+(definition (expression relational_expression((expression (integer)) (expression (integer)))))
 
 ==================
 Complex Equality
