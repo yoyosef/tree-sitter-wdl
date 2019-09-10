@@ -960,7 +960,7 @@
         },
         {
           "type": "STRING",
-          "value": "="
+          "value": ":"
         },
         {
           "type": "SYMBOL",

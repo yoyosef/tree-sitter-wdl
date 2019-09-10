@@ -151,7 +151,7 @@ module.exports = grammar({
                                 '{',
                                       repeat(seq( $.runtime_kv)),
                                 '}'),
-      runtime_kv: $ => seq($.identifier,  '=',  $.expression),
+      runtime_kv: $ => seq($.identifier,  ':',  $.expression),
 
       task_output: $ => seq('output',  '{', repeat(seq( $.task_output_kv)), '}'),
       task_output_kv: $ => seq($.type, $.identifier,  '=',  $.string_literal),

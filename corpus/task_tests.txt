@@ -37,7 +37,7 @@ task start {
     aa ${aaaac}
   >>>
   runtime{
-    docker="stub"
+    docker: "stub"
   }
   output{
 
