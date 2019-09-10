@@ -27,6 +27,36 @@ task start {
       (runtime)
       (task_output)))))
 
+
+==================
+Simple runtime test
+==================
+task start {
+
+  command <<<
+    aa ${aaaac}
+  >>>
+  runtime{
+    docker="stub"
+  }
+  output{
+
+  }
+}
+---
+(definition (document (task (identifier)
+
+
+(task_sections
+      (command
+            (command_part  (command_part_string))
+            (command_part  (command_part_var (expression (identifier))))
+
+      )
+
+      (runtime (runtime_kv (identifier) (expression (string_literal))))
+      (task_output)))))
+
 ==================
 Task w/ complex command
 ==================
