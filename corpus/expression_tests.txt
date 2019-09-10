@@ -46,6 +46,16 @@ Relational Expression
 (definition (expression relational_expression((expression (integer)) (expression (integer)))))
 
 ==================
+Bracket Expression
+==================
+[1+2*2]
+---
+(definition (expression (bracket_expression (expression (math_expression
+            (expression (integer))
+                    (expression (math_expression
+                            (expression (integer)) (expression (integer)))))))))
+
+==================
 Complex Equality
 ==================
 
