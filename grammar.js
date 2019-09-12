@@ -105,10 +105,7 @@ module.exports = grammar({
                               prec.left(seq($.expression, '.', $.expression)),
                               seq($.expression, '[', $.expression, ']'),
                               prec.left($.function_expression),
-                              prec.left(seq('if', $.expression, 'then',
-                              $.expression, 'else',
-                              $.expression)),
-                              // seq($.expression, $.center_operator, $.expression),,
+                              prec.left($.if_then_expression),
                                 choice($.string_literal,
                                   $.integer,
                                   $.float,
@@ -121,6 +118,9 @@ module.exports = grammar({
                                  $.equality_expression
                                     ),
                                 ),
+      if_then_expression: $ => seq('if', $.expression, 'then',
+      $.expression, 'else',
+      $.expression),
       function_expression: $=> seq($.expression, '(', optional(
         seq($.expression,
           repeat(
