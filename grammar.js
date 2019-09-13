@@ -102,7 +102,10 @@ module.exports = grammar({
       /// center_operator: $ => choice('%', '/', '+', '*', '-', '<', '=<', '>', '>=',
       // '==', '!=', '&&', '||'),
       expression: $ =>  prec.left(6, choice(
-                              prec.left($.member_access_expression),
+                              prec(PREC_EXPRESSION.GROUPING,
+                                $.parentheses_expression),
+
+                              prec.left(PREC_EXPRESSION.MEMBER_ACCESS, $.member_access_expression),
                               $.indexing_expression,
                               prec.left($.function_expression),
                               prec.left($.if_then_expression),
@@ -111,7 +114,7 @@ module.exports = grammar({
                                   $.float,
                                   $.boolean,
                                   $.identifier),
-                                  $.parentheses_expression,
+                                  ,
                                  $.dictionary_expression,
                                  $.math_expression,
                                  $.bracket_expression,
