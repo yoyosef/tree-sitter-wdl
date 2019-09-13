@@ -101,13 +101,39 @@ module.exports = grammar({
 
       /// center_operator: $ => choice('%', '/', '+', '*', '-', '<', '=<', '>', '>=',
       // '==', '!=', '&&', '||'),
+      // const PREC_EXPRESSION = {
+      //   GROUPING: 12,
+      //   MEMBER_ACCESS: 11,
+      //   INDEX: 10,
+      //   FUNCTION_CALL: 9,
+      //   LOGICAL_NOT: 8,
+      //   UNARY_PLUS: 8,
+      //   UNARY_NEGATION: 8,
+      //   MULTIPLICATION: 7,
+      //   DIVISION: 7,
+      //   REMAINDER: 7,
+      //   ADDITION: 6,
+      //   SUBTRACTION: 6,
+      //   LESS_THAN: 5,
+      //   LESS_OR_EQUAL: 5,
+      //   GREATER_THAN: 5,
+      //   GREATER_OR_EQUAL: 5,
+      //   EQUALITY: 4,
+      //   INEQUALITY: 4,
+      //   LOGICAL_AND: 3,
+      //   LOGICAL_OR: 2,
+      //   ASSIGNMENT: 1
+      // }
+
       expression: $ =>  prec.left(6, choice(
                               prec(PREC_EXPRESSION.GROUPING,
                                 $.parentheses_expression),
-
                               prec.left(PREC_EXPRESSION.MEMBER_ACCESS, $.member_access_expression),
-                              $.indexing_expression,
-                              prec.left($.function_expression),
+                              prec.left(PREC_EXPRESSION.INDEX, $.indexing_expression),
+                              prec.left(PREC_EXPRESSION.FUNCTION_CALL, $.function_expression),
+                              prec.right(PREC_EXPRESSION.LOGICAL_NOT, $.unary_expression),
+                              prec.left(PREC_EXPRESSION.LESS_THAN, $.inequality_expression)
+                              prec.left(PREC_EXPRESSION.EQUALITY, $.equality_expression),
                               prec.left($.if_then_expression),
                                 choice($.string_literal,
                                   $.integer,
@@ -152,14 +178,14 @@ module.exports = grammar({
         prec.left(PREC.LOGICAL_AND, seq($.expression, '&&', $.expression)),
         prec.left(PREC.UNARY, seq('!', $.expression))
       ),
-      equality_expression: $ => prec.left(PREC.EQUAL, seq(
+      equality_expression: $ => seq(
       $.expression, choice('==', '!='), $.expression
-      )),
-
-      relational_expression: $ => prec.left(PREC.RELATIONAL, seq(
+      ),
+      unary_expression: $ =>  choice(seq('-', $.expression),
+              seq('+', $.expression), seq('!', $.expression)),
+      inequality_expression: $ => seq(
       $.expression, choice('<', '>', '<=', '>='), $.expression
-    )),
-
+    ),
     type: $ => prec.left(seq(choice($.primitive_type,
         $.array_type,
         $.map_type,
