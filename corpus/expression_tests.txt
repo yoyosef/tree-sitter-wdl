@@ -100,7 +100,7 @@ Empty Dictionary
 ==================
 { }
 ---
-(definition (expression (dictionary_expression )))
+(definition (expression (dictionary_expression)))
 
 ==================
 Dictionary w/ values

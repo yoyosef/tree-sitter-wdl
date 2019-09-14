@@ -126,8 +126,11 @@ module.exports = grammar({
       parentheses_expression: $ => prec(PREC_EXPRESSION.GROUPING, seq('(', $.expression, ')')),
       dictionary_expression: $ => seq('{',
         choice(
-          optional(seq($.expression, ':', $.expression))),
-          seq(seq($.expression, ':', $.expression), repeat(seq(",", $.expression, ':', $.expression)))
+          optional(seq($.expression, ':', $.expression)),
+          seq(seq($.expression, ':', $.expression),
+              repeat(seq(",", $.expression, ':', $.expression))
+        )
+      )
        ,'}'),
       bracket_expression: $ =>  prec(PREC.PAREN_DECLARATOR, seq('[',
                               choice(optional($.expression),
