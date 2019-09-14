@@ -162,19 +162,6 @@ module.exports = grammar({
                               choice(optional($.expression),
                             seq($.expression, repeat(seq(',', $.expression)))
                           ), ']')),
-      math_expression: $ => choice(
-        prec.left(PREC.ADD, seq($.expression, '+', $.expression)),
-        prec.left(PREC.ADD, seq($.expression, '-', $.expression)),
-        prec.left(PREC.MULTIPLY, seq($.expression, '*', $.expression)),
-        prec.left(PREC.MULTIPLY, seq($.expression, '/', $.expression)),
-        prec.left(PREC.MULTIPLY, seq($.expression, '%', $.expression)),
-        prec.right(PREC.UNARY, seq('-', $.expression)),
-        prec.right(PREC.UNARY, seq('+', $.expression))),
-        logical_expression: $ => choice(
-        prec.left(PREC.LOGICAL_OR, seq($.expression, '||', $.expression)),
-        prec.left(PREC.LOGICAL_AND, seq($.expression, '&&', $.expression)),
-        prec.left(PREC.UNARY, seq('!', $.expression))
-      ),
       logical_and_expression: $ => seq($.expression, '&&', $.expression),
       logical_or_expression: $ => seq($.expression, '||', $.expression),
       equality_expression: $ => seq(
