@@ -134,19 +134,18 @@ module.exports = grammar({
                               prec.right(PREC_EXPRESSION.LOGICAL_NOT, $.unary_expression),
                               prec.left(PREC_EXPRESSION.LESS_THAN, $.inequality_expression)
                               prec.left(PREC_EXPRESSION.EQUALITY, $.equality_expression),
+                              prec.left(PREC_EXPRESSION.LOGICAL_AND, $.logical_and_expression),
+                              prec.left(PREC_EXPRESSION.LOGICAL_OR, $.logical_or_expression),
+                              prec.right(PREC_EXPRESSION.ASSIGNMENT, $.declaration),
                               prec.left($.if_then_expression),
                                 choice($.string_literal,
                                   $.integer,
                                   $.float,
                                   $.boolean,
                                   $.identifier),
-                                  ,
                                  $.dictionary_expression,
-                                 $.math_expression,
-                                 $.bracket_expression,
-                                 $.equality_expression
-                                    ),
-                                ),
+                                 $.bracket_expression
+                                    )),
       member_access_expression: $ => seq($.expression, '.', $.expression),
       indexing_expression: $ => seq($.expression, '[', $.expression, ']'),
       if_then_expression: $ => seq('if', $.expression, 'then',
@@ -178,6 +177,8 @@ module.exports = grammar({
         prec.left(PREC.LOGICAL_AND, seq($.expression, '&&', $.expression)),
         prec.left(PREC.UNARY, seq('!', $.expression))
       ),
+      logical_and_expression: $ => seq($.expression, '&&', $.expression),
+      logical_or_expression: $ => seq($.expression, '||', $.expression)),
       equality_expression: $ => seq(
       $.expression, choice('==', '!='), $.expression
       ),
