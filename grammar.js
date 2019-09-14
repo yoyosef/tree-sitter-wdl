@@ -126,7 +126,7 @@ module.exports = grammar({
       // }
 
       expression: $ =>  prec.left(6, choice(
-                               $.parentheses_expression,
+                              $.parentheses_expression,
                               $.member_access_expression,
                               $.indexing_expression,
                               $.function_expression,
@@ -134,14 +134,14 @@ module.exports = grammar({
                               $.binary_expression,
                               $.declaration,
                               $.if_then_expression,
-                                $.string_literal,
-                                  $.integer,
-                                  $.float,
-                                  $.boolean,
-                                  $.identifier,
-                                 $.dictionary_expression,
-                                 $.bracket_expression
-                                    )),
+                              $.string_literal,
+                              $.integer,
+                              $.float,
+                              $.boolean,
+                              $.identifier,
+                              $.dictionary_expression,
+                              $.bracket_expression
+                            )),
       member_access_expression: $ => prec.left(PREC_EXPRESSION.MEMBER_ACCESS,  seq($.expression, '.', $.expression)),
       indexing_expression: $ => prec.left(PREC_EXPRESSION.INDEX, seq($.expression, '[', $.expression, ']')),
       if_then_expression: $ => prec.left(seq('if', $.expression, 'then',
