@@ -132,10 +132,7 @@ module.exports = grammar({
                               prec.left(PREC_EXPRESSION.INDEX, $.indexing_expression),
                               prec.left(PREC_EXPRESSION.FUNCTION_CALL, $.function_expression),
                               prec.right(PREC_EXPRESSION.LOGICAL_NOT, $.unary_expression),
-                              prec.left(PREC_EXPRESSION.LESS_THAN, $.inequality_expression),
-                              prec.left(PREC_EXPRESSION.EQUALITY, $.equality_expression),
-                              prec.left(PREC_EXPRESSION.LOGICAL_AND, $.logical_and_expression),
-                              prec.left(PREC_EXPRESSION.LOGICAL_OR, $.logical_or_expression),
+                              $.binary_expression,
                               prec.right(PREC_EXPRESSION.ASSIGNMENT, $.declaration),
                               prec.left($.if_then_expression),
                                 choice($.string_literal,
@@ -182,6 +179,40 @@ module.exports = grammar({
       equality_expression: $ => seq(
       $.expression, choice('==', '!='), $.expression
       ),
+      // binary_expression: $ => choice(
+      //     prec.left(PREC_EXPRESSION.ADD, seq($.expression, choice('+', '-'), $.expression)),
+      //     prec.left(PREC_EXPRESSION.MULTIPLY, seq($.expression, choice('*', '/', '%'), $.expression)),
+      //     prec.left(PREC_EXPRESSION.LOGICAL_OR, seq($.expression, '||', $.expression)),
+      //     prec.left(PREC_EXPRESSION.LOGICAL_AND, seq($.expression, '&&', $.expression)),
+      //     prec.left(PREC_EXPRESSION.EQUAL, seq($.expression, choice('==', '!='), $.expression)),
+      //     prec.left(PREC_EXPRESSION.GREATER_THAN, seq($.expression, choice('>=', '<=', '>', '<'), $.expression))
+      // ),
+
+      binary_expression: $ => {
+     const table = [
+       ['+', PREC_EXPRESSION.ADDITION],
+       ['-', PREC_EXPRESSION.ADDITION],
+       ['*', PREC_EXPRESSION.MULTIPLICATION],
+       ['/', PREC_EXPRESSION.MULTIPLICATION],
+       ['%', PREC_EXPRESSION.MULTIPLICATION],
+       ['||', PREC_EXPRESSION.LOGICAL_OR],
+       ['&&', PREC_EXPRESSION.LOGICAL_AND],
+       ['==', PREC_EXPRESSION.EQUALITY],
+       ['!=', PREC_EXPRESSION.EQUALITY],
+       ['>', PREC_EXPRESSION.GREATER_THAN],
+       ['>=', PREC_EXPRESSION.GREATER_OR_EQUAL],
+       ['<=', PREC_EXPRESSION.LESS_OR_EQUAL],
+       ['<', PREC_EXPRESSION.LESS_THAN],
+     ];
+
+     return choice(...table.map(([operator, precedence]) => {
+       return prec.left(precedence, seq(
+         field('left', $.expression),
+         field('operator', operator),
+         field('right', $.expression)
+       ))
+     }));
+   },
       unary_expression: $ =>  choice(seq('-', $.expression),
               seq('+', $.expression), seq('!', $.expression)),
       inequality_expression: $ => seq(
