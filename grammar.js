@@ -49,8 +49,6 @@ module.exports = grammar({
   name: 'wdl',
 
   rules: {
-    // ws: $ => /((%x20) | (%x9) | (%xD) | (%xA))+/,
-    // ws: $ => /(' ')+/,
     definition: $ => choice($.expression, $.type, $.runtime, $.document, $.call),
     identifier: $ => prec(-1, /[a-zA-Z][a-zA-Z0-9_]+/),
     integer: $ => /[1-9][0-9]*|0[xX][0-9a-fA-F]+|0[0-7]*/,
@@ -98,34 +96,7 @@ module.exports = grammar({
         /U[0-9a-fA-F]{8}/
       )
     )),
-
-      /// center_operator: $ => choice('%', '/', '+', '*', '-', '<', '=<', '>', '>=',
-      // '==', '!=', '&&', '||'),
-      // const PREC_EXPRESSION = {
-      //   GROUPING: 12,
-      //   MEMBER_ACCESS: 11,
-      //   INDEX: 10,
-      //   FUNCTION_CALL: 9,
-      //   LOGICAL_NOT: 8,
-      //   UNARY_PLUS: 8,
-      //   UNARY_NEGATION: 8,
-      //   MULTIPLICATION: 7,
-      //   DIVISION: 7,
-      //   REMAINDER: 7,
-      //   ADDITION: 6,
-      //   SUBTRACTION: 6,
-      //   LESS_THAN: 5,
-      //   LESS_OR_EQUAL: 5,
-      //   GREATER_THAN: 5,
-      //   GREATER_OR_EQUAL: 5,
-      //   EQUALITY: 4,
-      //   INEQUALITY: 4,
-      //   LOGICAL_AND: 3,
-      //   LOGICAL_OR: 2,
-      //   ASSIGNMENT: 1
-      // }
-
-      expression: $ =>  prec.left(6, choice(
+    expression: $ =>  prec.left(6, choice(
                               $.parentheses_expression,
                               $.member_access_expression,
                               $.indexing_expression,
@@ -167,17 +138,8 @@ module.exports = grammar({
       equality_expression: $ => seq(
       $.expression, choice('==', '!='), $.expression
       ),
-      // binary_expression: $ => choice(
-      //     prec.left(PREC_EXPRESSION.ADD, seq($.expression, choice('+', '-'), $.expression)),
-      //     prec.left(PREC_EXPRESSION.MULTIPLY, seq($.expression, choice('*', '/', '%'), $.expression)),
-      //     prec.left(PREC_EXPRESSION.LOGICAL_OR, seq($.expression, '||', $.expression)),
-      //     prec.left(PREC_EXPRESSION.LOGICAL_AND, seq($.expression, '&&', $.expression)),
-      //     prec.left(PREC_EXPRESSION.EQUAL, seq($.expression, choice('==', '!='), $.expression)),
-      //     prec.left(PREC_EXPRESSION.GREATER_THAN, seq($.expression, choice('>=', '<=', '>', '<'), $.expression))
-      // ),
-
       binary_expression: $ => {
-     const table = [
+      const table = [
        ['+', PREC_EXPRESSION.ADDITION],
        ['-', PREC_EXPRESSION.ADDITION],
        ['*', PREC_EXPRESSION.MULTIPLICATION],
