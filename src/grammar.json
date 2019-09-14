@@ -204,73 +204,69 @@
       }
     },
     "expression": {
-      "type": "PREC_LEFT",
-      "value": 6,
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "parentheses_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "member_access_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "indexing_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "function_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "unary_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "binary_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "declaration"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "if_then_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "string_literal"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "integer"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "float"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "boolean"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "identifier"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "dictionary_expression"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "bracket_expression"
-          }
-        ]
-      }
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "parentheses_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "member_access_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "indexing_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "function_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "unary_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "binary_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declaration"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "if_then_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "string_literal"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "integer"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "float"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "boolean"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dictionary_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "bracket_expression"
+        }
+      ]
     },
     "member_access_expression": {
       "type": "PREC_LEFT",

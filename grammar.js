@@ -96,7 +96,7 @@ module.exports = grammar({
         /U[0-9a-fA-F]{8}/
       )
     )),
-    expression: $ =>  prec.left(6, choice(
+    expression: $ =>  choice(
                               $.parentheses_expression,
                               $.member_access_expression,
                               $.indexing_expression,
@@ -112,7 +112,7 @@ module.exports = grammar({
                               $.identifier,
                               $.dictionary_expression,
                               $.bracket_expression
-                            )),
+                            ),
       member_access_expression: $ => prec.left(PREC_EXPRESSION.MEMBER_ACCESS,  seq($.expression, '.', $.expression)),
       indexing_expression: $ => prec.left(PREC_EXPRESSION.INDEX, seq($.expression, '[', $.expression, ']')),
       if_then_expression: $ => prec.left(seq('if', $.expression, 'then',
