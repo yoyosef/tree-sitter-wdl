@@ -126,14 +126,14 @@ module.exports = grammar({
       // }
 
       expression: $ =>  prec.left(6, choice(
-                              prec(PREC_EXPRESSION.GROUPING,$.parentheses_expression),
-                              prec.left(PREC_EXPRESSION.MEMBER_ACCESS, $.member_access_expression),
-                              prec.left(PREC_EXPRESSION.INDEX, $.indexing_expression),
-                              prec.left(PREC_EXPRESSION.FUNCTION_CALL, $.function_expression),
-                              prec.right(PREC_EXPRESSION.LOGICAL_NOT, $.unary_expression),
+                               $.parentheses_expression,
+                              $.member_access_expression,
+                              $.indexing_expression,
+                              $.function_expression,
+                              $.unary_expression,
                               $.binary_expression,
-                              prec.right(PREC_EXPRESSION.ASSIGNMENT, $.declaration),
-                              prec.left($.if_then_expression),
+                              $.declaration,
+                              $.if_then_expression,
                                 $.string_literal,
                                   $.integer,
                                   $.float,
@@ -142,17 +142,17 @@ module.exports = grammar({
                                  $.dictionary_expression,
                                  $.bracket_expression
                                     )),
-      member_access_expression: $ => seq($.expression, '.', $.expression),
-      indexing_expression: $ => seq($.expression, '[', $.expression, ']'),
-      if_then_expression: $ => seq('if', $.expression, 'then',
+      member_access_expression: $ => prec.left(PREC_EXPRESSION.MEMBER_ACCESS,  seq($.expression, '.', $.expression)),
+      indexing_expression: $ => prec.left(PREC_EXPRESSION.INDEX, seq($.expression, '[', $.expression, ']')),
+      if_then_expression: $ => prec.left(seq('if', $.expression, 'then',
       $.expression, 'else',
-      $.expression),
-      function_expression: $=> seq($.expression, '(', optional(
+      $.expression)),
+      function_expression: $=> prec.left(PREC_EXPRESSION.FUNCTION_CALL, seq($.expression, '(', optional(
         seq($.expression,
           repeat(
             seq(',',$.expression)
-          ))), ')'),
-      parentheses_expression: $ => prec(PREC.PAREN_DECLARATOR, seq('(', $.expression, ')')),
+          ))), ')')),
+      parentheses_expression: $ => prec(PREC_EXPRESSION.GROUPING, seq('(', $.expression, ')')),
       dictionary_expression: $ => seq('{',
         choice(
           optional(seq($.expression, ':', $.expression))),
@@ -214,10 +214,15 @@ module.exports = grammar({
        ))
      }));
    },
-      unary_expression: $ =>  choice(seq('-', $.expression),
-              seq('+', $.expression), seq('!', $.expression)),
-      inequality_expression: $ => seq(
-      $.expression, choice('<', '>', '<=', '>='), $.expression
+    unary_expression: $ =>  prec.right(PREC_EXPRESSION.LOGICAL_NOT, choice(
+              seq('-', $.expression),
+              seq('+', $.expression),
+              seq('!', $.expression)
+            )),
+    inequality_expression: $ => seq(
+                 $.expression,
+                 choice('<', '>', '<=', '>='),
+                 $.expression
     ),
     type: $ => prec.left(seq(choice($.primitive_type,
         $.array_type,
@@ -261,9 +266,9 @@ module.exports = grammar({
                                                     $.parameter_meta,
                                                     $.meta))),
 
-      declaration: $ => seq($.type, $.identifier,
+      declaration: $ => prec.right(PREC_EXPRESSION.ASSIGNMENT, seq($.type, $.identifier,
                   optional(
-                    seq('=', $.expression) ) ),
+                    seq('=', $.expression) ))),
 
       command: $ =>choice(
                   seq('command',  '{', repeat1($.command_part),  '}'),
