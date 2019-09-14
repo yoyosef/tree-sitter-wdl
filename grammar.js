@@ -132,7 +132,7 @@ module.exports = grammar({
                               prec.left(PREC_EXPRESSION.INDEX, $.indexing_expression),
                               prec.left(PREC_EXPRESSION.FUNCTION_CALL, $.function_expression),
                               prec.right(PREC_EXPRESSION.LOGICAL_NOT, $.unary_expression),
-                              prec.left(PREC_EXPRESSION.LESS_THAN, $.inequality_expression)
+                              prec.left(PREC_EXPRESSION.LESS_THAN, $.inequality_expression),
                               prec.left(PREC_EXPRESSION.EQUALITY, $.equality_expression),
                               prec.left(PREC_EXPRESSION.LOGICAL_AND, $.logical_and_expression),
                               prec.left(PREC_EXPRESSION.LOGICAL_OR, $.logical_or_expression),
@@ -178,7 +178,7 @@ module.exports = grammar({
         prec.left(PREC.UNARY, seq('!', $.expression))
       ),
       logical_and_expression: $ => seq($.expression, '&&', $.expression),
-      logical_or_expression: $ => seq($.expression, '||', $.expression)),
+      logical_or_expression: $ => seq($.expression, '||', $.expression),
       equality_expression: $ => seq(
       $.expression, choice('==', '!='), $.expression
       ),
