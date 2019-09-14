@@ -126,8 +126,7 @@ module.exports = grammar({
       // }
 
       expression: $ =>  prec.left(6, choice(
-                              prec(PREC_EXPRESSION.GROUPING,
-                                $.parentheses_expression),
+                              prec(PREC_EXPRESSION.GROUPING,$.parentheses_expression),
                               prec.left(PREC_EXPRESSION.MEMBER_ACCESS, $.member_access_expression),
                               prec.left(PREC_EXPRESSION.INDEX, $.indexing_expression),
                               prec.left(PREC_EXPRESSION.FUNCTION_CALL, $.function_expression),
@@ -135,11 +134,11 @@ module.exports = grammar({
                               $.binary_expression,
                               prec.right(PREC_EXPRESSION.ASSIGNMENT, $.declaration),
                               prec.left($.if_then_expression),
-                                choice($.string_literal,
+                                $.string_literal,
                                   $.integer,
                                   $.float,
                                   $.boolean,
-                                  $.identifier),
+                                  $.identifier,
                                  $.dictionary_expression,
                                  $.bracket_expression
                                     )),
@@ -155,12 +154,14 @@ module.exports = grammar({
           ))), ')'),
       parentheses_expression: $ => prec(PREC.PAREN_DECLARATOR, seq('(', $.expression, ')')),
       dictionary_expression: $ => seq('{',
-        choice(repeat(
-          seq($.expression, ':', $.expression)
-        ),
-        seq( seq($.expression, ':', $.expression), repeat1(seq(",", $.expression, ':', $.expression))))
-      ,'}'),
-      bracket_expression: $ =>  prec(PREC.PAREN_DECLARATOR, seq('[', repeat($.expression), ']')),
+        choice(
+          optional(seq($.expression, ':', $.expression))),
+          seq(seq($.expression, ':', $.expression), repeat(seq(",", $.expression, ':', $.expression)))
+       ,'}'),
+      bracket_expression: $ =>  prec(PREC.PAREN_DECLARATOR, seq('[',
+                              choice(optional($.expression),
+                            seq($.expression, repeat(seq(',', $.expression)))
+                          ), ']')),
       math_expression: $ => choice(
         prec.left(PREC.ADD, seq($.expression, '+', $.expression)),
         prec.left(PREC.ADD, seq($.expression, '-', $.expression)),
