@@ -64,7 +64,7 @@ task HaplotypeCallerERC {
                                 (declaration
                                       (type
                                           (array_type (array_type (primitive_type))))
-                                                      (identifier) (expression (expression (identifier)) (expression (identifier)))))
+                                                      (identifier) (expression (function_expression (expression (identifier)) (expression (identifier))))))
                                   (workflow_element (declaration (type (primitive_type)) (identifier)))
                                   (workflow_element (declaration (type (primitive_type)) (identifier)))
                                   (workflow_element (declaration (type (primitive_type)) (identifier)))
@@ -75,7 +75,15 @@ task HaplotypeCallerERC {
                                           (workflow_element
                                               (call (namespaced_identifier (identifier))
                                                     (call_body
-                                                            (inputs (variable_mappings (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (identifier))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))) (variable_mapping_kv (identifier) (expression (expression (identifier)) (expression (integer)))))))
+                                                            (inputs (variable_mappings (variable_mapping_kv (identifier) (expression (identifier)))
+                                                                                        (variable_mapping_kv (identifier) (expression (identifier)))
+                                                                                        (variable_mapping_kv (identifier) (expression (identifier)))
+                                                                                        (variable_mapping_kv (identifier) (expression (identifier)))
+                                                                                        (variable_mapping_kv (identifier) (expression (indexing_expression (expression (identifier)) (expression (integer)))))
+                                                                                        (variable_mapping_kv (identifier) (expression (indexing_expression (expression (identifier)) (expression (integer)))))
+                                                                                        (variable_mapping_kv (identifier) (expression (indexing_expression (expression (identifier)) (expression (integer)))))
+
+                                                                                        )))
                                                             ))))))
             (task (identifier)
                     (declaration (type (primitive_type)) (identifier))
