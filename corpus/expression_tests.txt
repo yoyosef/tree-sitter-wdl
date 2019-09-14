@@ -6,9 +6,9 @@ Multiplication and Addition Precedence
 
 ---
 
-(definition (expression (math_expression
+(definition (expression (binary_expression
             (expression (integer))
-                    (expression (math_expression
+                    (expression (binary_expression
                             (expression (integer)) (expression (integer)))))))
 
 
@@ -19,8 +19,8 @@ Unary Expression
 +1-2
 
 ---
-(definition (expression (math_expression
-          (expression (math_expression
+(definition (expression (binary_expression
+          (expression (unary_expression
           (expression (integer)))) (expression (integer)))))
 
 
@@ -33,7 +33,7 @@ Equality
 ---
 
 (definition
-        (expression (equality_expression
+        (expression (binary_expression
                                 (expression (integer))
                                 (expression (integer))))
 )
@@ -43,24 +43,18 @@ Relational Expression
 ==================
 3 > 2
 ---
-(definition (expression relational_expression((expression (integer)) (expression (integer)))))
+(definition (expression (binary_expression (expression (integer)) (expression (integer)))))
 
 ==================
 Bracket Expression
 ==================
 [1+2*2]
 ---
-(definition (expression (bracket_expression (expression (math_expression
+(definition (expression (bracket_expression (expression (binary_expression
             (expression (integer))
-                    (expression (math_expression
+                    (expression (binary_expression
                             (expression (integer)) (expression (integer)))))))))
 
-==================
-Tuple Expression
-==================
-(2, 3)
----
-(definition (expression (integer) (integer)))
 
 ==================
 Complex Equality
@@ -72,8 +66,8 @@ Complex Equality
 
 (definition
         (expression
-              (equality_expression
-                            (expression (math_expression
+              (binary_expression
+                            (expression (binary_expression
                                           (expression (integer))
                                           (expression (integer))))
                             (expression (integer))
@@ -90,16 +84,16 @@ if 1 + 3 == 2 then "Day" else "Morning"
 
 ---
 
-(definition (expression (expression
-          (equality_expression
-              (expression (math_expression
+(definition (expression (if_then_expression
+          (expression (binary_expression
+              (expression (binary_expression
               (expression (integer)) (expression (integer))
               ))
             (expression (integer)))
           )
 
         (expression (string_literal)) (expression (string_literal))
-        ))
+        )))
 
 ==================
 Empty Dictionary

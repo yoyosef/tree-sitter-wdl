@@ -11,7 +11,7 @@ call identifier {
 ---
 
 (definition
-        (call 
+        (call
           (namespaced_identifier (identifier))
               (call_body
                 (inputs
@@ -19,5 +19,5 @@ call identifier {
                             (variable_mapping_kv (identifier)
                                 (expression (string_literal)))
                             (variable_mapping_kv (identifier)
-                                (expression (expression (identifier))
-                                  (expression (identifier)))))))))
+                                (expression (member_access_expression (expression (identifier))
+                                  (expression (identifier))))))))))
