@@ -117,6 +117,30 @@ Dictionary w/ values
 )
 
 ==================
+Empty Array
+==================
+[ ]
+---
+(definition (expression (bracket_expression)))
+
+
+==================
+Dictionary w/ values
+==================
+[1, 2]
+
+---
+(definition
+    (expression
+       (bracket_expression
+          (expression (integer))
+          (expression (integer)) 
+      )
+    )
+)
+
+
+==================
 String - Double Quotes
 ==================
 "Hi, how are you?"
