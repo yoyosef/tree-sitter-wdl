@@ -13,7 +13,22 @@ Multiplication and Addition Precedence
 
 
 ==================
-Unary Expression
+Unary and Addition Precedence 1
+==================
+
+1+-2
+
+---
+
+(definition (expression (binary_expression
+          (expression (integer))
+          (expression (unary_expression (expression (integer))))
+          )
+        )
+       )
+
+==================
+Unary and Addition Precedence 2
 ==================
 
 +1-2
@@ -134,7 +149,7 @@ Dictionary w/ values
     (expression
        (bracket_expression
           (expression (integer))
-          (expression (integer)) 
+          (expression (integer))
       )
     )
 )
