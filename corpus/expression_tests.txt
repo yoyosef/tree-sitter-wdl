@@ -54,6 +54,18 @@ Equality
 )
 
 ==================
+Not Equality
+==================
+
+3 != 2
+
+---
+(definition
+        (expression (binary_expression
+                                (expression (integer))
+                                (expression (integer))))
+)
+==================
 Relational Expression
 ==================
 3 > 2
