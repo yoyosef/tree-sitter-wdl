@@ -2,7 +2,7 @@
 
 ## Introduction
 Parser for WDL, a workflow language developed by Broad Institute (MIT)
-Developed using tree-sitter
+Developed using tree-sitter, an open source parser generator
 ## Software
 * [tree-sitter github](https://github.com/tree-sitter/tree-sitter)
 * [tree-sitter documentation](https://tree-sitter.github.io/tree-sitter/)
