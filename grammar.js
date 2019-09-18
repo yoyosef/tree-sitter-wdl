@@ -261,7 +261,7 @@ module.exports = grammar({
                          $.identifier)
                       )
                     ),
-      workflow: $ => prec.right(6, seq('workflow',  $.identifier,   '{',  repeat($.workflow_element),  '}')),
+      workflow: $ => seq('workflow',  $.identifier,   '{',  repeat($.workflow_element),  '}'),
       workflow_element: $ => choice($.call,
                                     $.loop,
                                     $.conditional,
