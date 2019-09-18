@@ -445,11 +445,6 @@
     }
   },
   {
-    "type": "identifier",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "if_then_expression",
     "named": true,
     "fields": {},
@@ -1097,6 +1092,10 @@
         }
       ]
     }
+  },
+  {
+    "type": "identifier",
+    "named": true
   },
   {
     "type": "integer",
