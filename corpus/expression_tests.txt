@@ -152,7 +152,7 @@ Empty Array
 
 
 ==================
-Dictionary w/ values
+Array w/ values
 ==================
 [1, 2]
 
@@ -165,7 +165,25 @@ Dictionary w/ values
       )
     )
 )
+==================
+Empty Function Call
+==================
+func()
+---
+(definition (expression (function_expression (expression (identifier)))))
 
+==================
+Function Call
+==================
+func(inputSamplesFile)
+---
+(definition (expression
+              (function_expression
+                (expression (identifier))
+                (expression (identifier))
+              )
+            )
+)
 
 ==================
 String - Double Quotes
