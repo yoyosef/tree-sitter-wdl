@@ -207,16 +207,16 @@ module.exports = grammar({
       meta_kv: $ => seq($.identifier,  '=',  $.string_literal),
 
 
-      task: $ => prec(1, seq('task',
+      task: $ => seq('task',
              $.identifier,
 
             '{',  repeat($.declaration),
-             $.task_sections,  '}')),
-      task_sections: $ => prec(1, repeat1(choice($.command,
+             $.task_sections,  '}'),
+      task_sections: $ => repeat1(choice($.command,
                                                     $.runtime,
                                                     $.task_output,
                                                     $.parameter_meta,
-                                                    $.meta))),
+                                                    $.meta)),
 
       declaration: $ => prec.right(PREC_EXPRESSION.ASSIGNMENT, seq($.type, $.identifier,
                   optional(
