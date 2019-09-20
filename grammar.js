@@ -176,11 +176,11 @@ module.exports = grammar({
                  choice('<', '>', '<=', '>='),
                  $.expression
     ),
-    type: $ => prec.left(seq(choice($.primitive_type,
+    type: $ => seq(choice($.primitive_type,
         $.array_type,
         $.map_type,
         $.object_type),
-        optional($.type_postfix_quantifier))),
+        optional($.type_postfix_quantifier)),
 
       array_type: $ => seq('Array',
             '[',
