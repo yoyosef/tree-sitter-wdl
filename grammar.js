@@ -234,9 +234,9 @@ module.exports = grammar({
       var_option_key: $ => choice('sep', 'true', 'false', 'quote', 'default'),
       var_option_value: $ => $.expression,
 
-      call: $ => prec.right(6, seq('call', $.namespaced_identifier,
+      call: $ => seq('call', $.namespaced_identifier,
                            optional(seq('as', $.identifier)),
-                           optional($.call_body))),
+                           optional($.call_body)),
       call_body: $ => seq('{', optional($.inputs), '}'),
       inputs: $ => seq('input',  ':',  $.variable_mappings),
 
