@@ -10,7 +10,33 @@ workflow name {
 ---
 
 (definition  (document (workflow (identifier))))
+==================
+Scatter Example
+==================
 
+workflow jointCallingGenotypes {
+    scatter (sample in inputSamples) {
+        call HaplotypeCallerERC {
+          input: GATK=gatk,
+            RefFasta=refFasta
+        }
+}
+
+}
+---
+(definition (document (workflow (identifier)
+(workflow_element
+  (scatter (scatter_iteration_statment (identifier) (expression (identifier)))
+    (scatter_body
+        (workflow_element
+            (call (namespaced_identifier (identifier))
+                  (call_body
+                    (inputs (variable_mappings
+                      (variable_mapping_kv (identifier) (expression (identifier)))
+                      (variable_mapping_kv (identifier) (expression (identifier)))
+                                                      )))
+                          )))))
+                          )))
 ==================
 Complex Workflow w/ no command
 ==================
