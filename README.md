@@ -1,5 +1,5 @@
 # tree-sitter-wdl
-
+[![npm version](https://badge.fury.io/js/tree-sitter-wdl.png)](https://badge.fury.io/js/tree-sitter-wdl)
 ## Introduction
 Parser for WDL, a workflow language developed by Broad Institute (MIT)
 Developed using tree-sitter, an open source parser generator
