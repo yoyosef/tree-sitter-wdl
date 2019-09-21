@@ -1627,7 +1627,7 @@
     },
     "command_part_string": {
       "type": "PATTERN",
-      "value": "[a-zA-Z]+"
+      "value": "."
     },
     "command_part_var": {
       "type": "SEQ",

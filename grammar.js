@@ -227,7 +227,7 @@ module.exports = grammar({
                   seq('command',  '<<<', repeat1($.command_part),  '>>>')),
 
       command_part: $ => choice($.command_part_string, $.command_part_var),
-      command_part_string: $ => /[a-zA-Z]+/,
+      command_part_string: $ => /.+/,
       command_part_var: $ => seq('$', '{', repeat($.var_option), $.expression, '}'),
 
       var_option: $ => seq($.var_option_key,  '=',  $.var_option_value),
