@@ -866,11 +866,11 @@
       "required": true,
       "types": [
         {
-          "type": "identifier",
+          "type": "expression",
           "named": true
         },
         {
-          "type": "string_literal",
+          "type": "identifier",
           "named": true
         },
         {

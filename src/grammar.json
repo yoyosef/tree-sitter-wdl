@@ -1365,7 +1365,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "string_literal"
+          "name": "expression"
         }
       ]
     },
