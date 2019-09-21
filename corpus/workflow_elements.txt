@@ -214,12 +214,12 @@ task HaplotypeCallerERC {
                     (declaration (type (primitive_type)) (identifier))
                       (task_sections
                             (command
-                                (command_part (command_part_string)) (ERROR (UNEXPECTED 'j'))
-                                (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED 'T')
-                                                                          (UNEXPECTED 'E') (UNEXPECTED 'R'))
-                                (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
-                                (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED ' '))
-                                (command_part (command_part_var (expression (identifier)))) (ERROR (UNEXPECTED '_') (UNEXPECTED 'g') (UNEXPECTED 'v')))
+                                (command_part (command_part_string)) )
+                                (command_part (command_part_var (expression (identifier))))
+                                                                          )
+                                (command_part (command_part_var (expression (identifier)))))
+                                (command_part (command_part_var (expression (identifier)))))
+                                (command_part (command_part_var (expression (identifier))))))
                     (task_output (task_output_kv (type (primitive_type)) (identifier) (string_literal)))))
               )
 )
