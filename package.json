@@ -1,17 +1,27 @@
 {
   "name": "tree-sitter-wdl",
-  "version": "1.0.0",
-  "description": "parser for the workflow description language (wdl)",
+  "version": "0.0.1",
+  "description": "tree-sitter parser for WDL, a workflow description language",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoyosef/tree-sitter-wdl.git"
+  },
+  "author": "Yosef Leibman",
+  "license": "(MIT)",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/yoyosef/tree-sitter-wdl/issues"
+  },
+  "homepage": "https://github.com/yoyosef/tree-sitter-wdl#readme",
   "dependencies": {
-    "nan": "^2.13.2"
+    "nan": "^2.14.0"
   },
   "devDependencies": {
-    "tree-sitter-cli": "^0.14.7"
+    "tree-sitter-cli": "^0.15.9"
   }
 }
