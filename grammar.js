@@ -1,4 +1,5 @@
 const PREC = {
+  COMMENT: -2,
   PAREN_DECLARATOR: -10,
   ASSIGNMENT: -1,
   CONDITIONAL: -2,
@@ -47,7 +48,10 @@ const PREC_EXPRESSION = {
 
 module.exports = grammar({
   name: 'wdl',
-
+  extras: $ => [
+   $.comment,
+  /\s|\\\n/
+  ],
   rules: {
     definition: $ => choice($.expression, $.type, $.runtime, $.document, $.call),
     identifier: $ => /[a-zA-Z][a-zA-Z0-9_]+/,
@@ -62,10 +66,12 @@ module.exports = grammar({
         'File',
         'String'
       ),
+
     // string: $ => prec(2,
     // choice(/'([\\\'\n]|\\[\\"\'nrbtfav\?]|\\[0-7]{1,3}|\\x[0-9a-fA-F]+|\\[uU]([0-9a-fA-F]{4})([0-9a-fA-F]{4})?)*'/,
     // /"([\\\"\n]|\\[\\"\'nrbtfav\?]|\\[0-7]{1,3}|\\x[0-9a-fA-F]+|\\[uU]([0-9a-fA-F]{4})([0-9a-fA-F]{4})?)*"/))
-
+    comment: $ => token(prec(PREC.COMMENT,
+      seq('#', /.*/))),
     string_literal: $ => choice(seq(
       '"',
       repeat(choice(
