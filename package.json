@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-wdl",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "tree-sitter parser for WDL, a workflow description language",
   "main": "index.js",
   "scripts": {
